@@ -12,31 +12,29 @@ import org.testcontainers.containers.MySQLContainer;
 public class TestContainers {
 
 
-
+    // need ~/.testcontainers.properties
     @Test
-    public void testEmptyPasswordWithNonRootUser() {
+    public void testDatabase() {
       List<String> bindings = new ArrayList();
       bindings.add("3306");
-      MySQLContainer container = (MySQLContainer) new MySQLContainer("mysql:5.5")
+      MySQLContainer<?>  container = (MySQLContainer) new MySQLContainer<>("mysql:5.5")
           .withDatabaseName("TEST")
           .withUsername("test")
           .withPassword("benjamin")
-          .withEnv("MYSQL_ROOT_HOST", "%");
-
-
-
-          
+          .withEnv("MYSQL_ROOT_HOST", "%")
+          .withInitScript("somepath.sql");
 
       try {
-        container.start();
-        assertTrue(true);
-       // System.out.println(container.getFirstMappedPort());
-      //  fail("ContainerLaunchException expected to be thrown");
+            container.start();
+            System.out.println("JDBC URL :" +  container.getJdbcUrl());
+            System.out.println("Container Name :" +  container.getContainerName());
+            assertTrue(true);
+
       } catch (ContainerLaunchException e) {
-          System.out.println(e);
+            System.out.println(e);
       } finally {
-        System.out.println("Ben about to stop the container");
-        container.stop();
+            System.out.println("about to stop the container");
+            container.stop();
       }
 
      
