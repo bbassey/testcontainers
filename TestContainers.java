@@ -15,14 +15,14 @@ public class TestContainers {
     // need ~/.testcontainers.properties
     @Test
     public void testDatabase() {
-      List<String> bindings = new ArrayList();
+      List<String> bindings = new ArrayList<String>();
       bindings.add("3306");
       MySQLContainer<?>  container = (MySQLContainer) new MySQLContainer<>("mysql:5.5")
           .withDatabaseName("TEST")
-          .withUsername("test")
-          .withPassword("benjamin")
+          .withUsername("TEST_USER")
+          .withPassword("TEST_PASSWORD")
           .withEnv("MYSQL_ROOT_HOST", "%")
-          .withInitScript("somepath.sql");
+          .withInitScript("./test.sql");
 
       try {
             container.start();
@@ -35,6 +35,7 @@ public class TestContainers {
       } finally {
             System.out.println("about to stop the container");
             container.stop();
+            container.close();
       }
 
      
